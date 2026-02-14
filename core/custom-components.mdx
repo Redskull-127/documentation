@@ -78,11 +78,16 @@ const customComponents = [
 const myRegistry = mergeRegistries(defaultRegistry, customComponents);
 
 // ... inside your app
-<EditorProvider>
-  {/* Pass registry to EmailEditor (conceptually - implementation pending) */}
-  <EmailEditor />
-</EditorProvider>;
+// ... inside your app
+function App() {
+  return (
+    <EditorProvider>
+      <EmailEditor
+        config={{
+          registry: myRegistry,
+        }}
+      />
+    </EditorProvider>
+  );
+}
 ```
-
-> [!NOTE]
-> Currently, the `EmailEditor` component uses the `defaultRegistry` internally. Custom registry support is being exposed via props in upcoming versions.

@@ -59,3 +59,77 @@ import { useNode } from "@open-email/editor";
 
 const node = useNode("some-node-id");
 ```
+
+## useDragDrop
+
+Access the current drag and drop state.
+
+```tsx
+import { useDragDrop } from "@open-email/editor";
+
+const { activeId, activeData, overId } = useDragDrop();
+```
+
+## useSidebarDraggable
+
+Makes a sidebar component draggable.
+
+```tsx
+import { useSidebarDraggable } from "@open-email/editor";
+
+const { attributes, listeners, setNodeRef, isDragging } = useSidebarDraggable(
+  "button", // component type
+  "Button", // label
+);
+```
+
+## useNodeDraggable
+
+Makes an existing node draggable (in canvas or layers).
+
+```tsx
+import { useNodeDraggable } from "@open-email/editor";
+
+const { attributes, listeners, setNodeRef, isDragging } = useNodeDraggable(
+  nodeId,
+  parentId,
+  index,
+  "Label",
+  "canvas", // or "layers"
+);
+```
+
+## useNodeDroppable
+
+Makes a node a drop target. If the node accepts children, drops will be inserted as the first child. If not, drops will be inserted after the node.
+
+```tsx
+import { useNodeDroppable } from "@open-email/editor";
+
+const { setNodeRef, isOver } = useNodeDroppable(
+  nodeId,
+  parentId,
+  index,
+  acceptsChildren,
+);
+```
+
+## useDropZone
+
+Creates a drop indicator zone between nodes.
+
+```tsx
+import { useDropZone } from "@open-email/editor";
+
+const { setNodeRef, isOver } = useDropZone(parentId, index);
+```
+
+## useContainerDropZone
+
+Creates a drop zone for an empty container.
+
+```tsx
+import { useContainerDropZone } from "@open-email/editor";
+
+const { setNodeRef, isOver } = useContainerDropZone(containerId);
+```

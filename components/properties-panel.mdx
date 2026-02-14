@@ -19,13 +19,13 @@ Like the sidebar, this is included in `<EmailEditor />` but can be used standalo
 import { PropertiesPanel, useEditor } from "@open-email/editor";
 
 function CustomLayout() {
-  const { selectedNodeId } = useEditor();
-
   return (
-    <div className="flex">
-      {/* ... canvas ... */}
-      <PropertiesPanel />
-    </div>
+    <EditorProvider>
+      <div className="flex">
+        {/* ... canvas ... */}
+        <PropertiesPanel />
+      </div>
+    </EditorProvider>
   );
 }
 ```

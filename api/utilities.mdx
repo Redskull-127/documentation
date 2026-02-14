@@ -41,3 +41,11 @@ import { createNode, findNode } from "@open-email/editor";
   Checks a document for errors (missing required fields, duplicate IDs, etc.).
   Returns an array of error messages.
 </ResponseField>
+
+<ResponseField name="getNodePath" type="(node, root) => number[]">
+  Returns the path of indices from the root to the node.
+</ResponseField>
+
+<ResponseField name="generateId" type="(prefix?) => string">
+  Generates a unique ID for a node.
+</ResponseField>

@@ -1,0 +1,87 @@
+---
+title: "Drag and Drop"
+description: "Understanding the drag-and-drop system in Open Email Editor"
+---
+
+The Open Email Editor features a robust drag-and-drop system built on top of `@dnd-kit/core`. This system handles dragging components from the sidebar, reordering nodes on the canvas, and managing the layer tree hierarchy.
+
+## Architecture
+
+The drag-and-drop implementation is centered around a single `<DragDropProvider>` that wraps the editor. This provider manages the global drag state and coordinates interactions between different drag sources (sidebar, canvas, layers) and drop targets.
+
+### Key Components
+
+- **DragDropProvider**: The context provider that manages `activeId`, `activeData`, and `overId`. It handles all `onDragEnd` logic to determine if a node should be created (sidebar drop) or moved (reorder).
+- **Draggable**: Elements that can be dragged (Sidebar items, Canvas nodes, Layer tree items).
+- **Droppable**: Areas where items can be dropped (Canvas nodes, Drop indicators).
+
+## Usage
+
+### Setup
+
+The `EmailEditor` component already includes the `DragDropProvider`, so you don't need to wrap it yourself. Just use the component as usual:
+
+```tsx
+import { EmailEditor, EditorProvider } from "@open-email/editor";
+
+export default function MyEditor() {
+  return (
+    <EditorProvider>
+      <EmailEditor />
+    </EditorProvider>
+  );
+}
+```
+
+### Custom Layouts
+
+If you are building a custom editor layout and dragging items from `EditorSidebar` or other sources, you must wrap your application in `DragDropProvider` manually.
+
+```tsx
+import {
+  EditorProvider,
+  DragDropProvider,
+  EditorSidebar,
+  EditorCanvas,
+} from "@open-email/editor";
+
+export default function CustomEditor() {
+  return (
+    <EditorProvider>
+      <DragDropProvider>
+        <div className="flex">
+          <EditorSidebar />
+          <EditorCanvas />
+        </div>
+      </DragDropProvider>
+    </EditorProvider>
+  );
+}
+```
+
+### Drag Sources
+
+There are three primary drag sources:
+
+1.  **Sidebar Items**: New components waiting to be added.
+    - Type: `sidebar-component`
+    - Action: Creates a new node on drop.
+2.  **Canvas Nodes**: Existing nodes on the visualization canvas.
+    - Type: `canvas-node`
+    - Action: Moves the node to a new position.
+3.  **Layer Nodes**: Existing nodes in the layer tree.
+    - Type: `layer-node`
+    - Action: Moves the node to a new position.
+
+### Drop Targets
+
+Items can be dropped in two ways:
+
+1.  **On a Node**: Dropping directly onto a component (e.g., a Container or Text block).
+    - If the target accepts children (like a Container), the item is inserted as the **first child**.
+    - If the target does not accept children (like a Text block), the item is inserted **after** the target.
+2.  **On a Drop Indicator**: Thin lines that appear between nodes to indicate precise insertion points.
+
+## Customization
+
+The system exposes several hooks to let you build custom drag-and-drop interfaces. See the [Hooks API](/api/hooks) for more details.

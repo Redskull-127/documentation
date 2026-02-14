@@ -25,7 +25,8 @@
             "pages": [
               "core/engine",
               "core/rendering",
-              "core/custom-components"
+              "core/custom-components",
+              "core/drag-and-drop"
             ]
           },
           {

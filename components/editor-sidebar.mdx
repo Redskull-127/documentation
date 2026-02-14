@@ -16,17 +16,27 @@ The `<EditorSidebar />` provides the drag-and-drop interface for adding componen
 If you are using `<EmailEditor />`, the sidebar is included by default. You can also use it standalone if you are building a custom editor layout.
 
 ```tsx
-import { EditorSidebar } from "@open-email/editor";
+import {
+  EditorSidebar,
+  EditorProvider,
+  DragDropProvider,
+} from "@open-email/editor";
 
 function CustomLayout() {
   return (
-    <div className="flex">
-      <EditorSidebar />
-      {/* ... canvas ... */}
-    </div>
+    <EditorProvider>
+      <DragDropProvider>
+        <div className="flex">
+          <EditorSidebar />
+          {/* ... canvas ... */}
+        </div>
+      </DragDropProvider>
+    </EditorProvider>
   );
 }
 ```
+
+> **Note**: For drag-and-drop to work in a custom layout, you must wrap your application in a `<DragDropProvider />` inside the `<EditorProvider />`.
 
 ## Props
 
