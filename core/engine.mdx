@@ -1,0 +1,78 @@
+---
+title: "Editor Engine"
+description: "Understanding the core state management of Open Email"
+---
+
+## Overview
+
+The Open Email Editor is built on top of a robust state management system powered by React Context and `useReducer`. This "engine" handles all the logic for manipulating the email document, such as adding, moving, updating, and deleting nodes.
+
+## EditorProvider
+
+The `<EditorProvider>` component is the root of the editor. It initializes the editor state and provides the context for all child components.
+
+```tsx
+import { EditorProvider } from "@open-email/editor";
+
+function App() {
+  return (
+    <EditorProvider
+      initialDocument={myDocument}
+      onChange={(doc) => console.log("Document changed", doc)}
+    >
+      {/* Editor components go here */}
+    </EditorProvider>
+  );
+}
+```
+
+### Props
+
+<ParamField path="initialDocument" type="EmailDocument">
+  The initial email document to load into the editor. If not provided, an empty
+  document is created.
+</ParamField>
+
+<ParamField path="onChange" type="(document: EmailDocument) => void">
+  Callback function fired whenever the document structure or content changes.
+</ParamField>
+
+## useEditor Hook
+
+The `useEditor` hook is the primary way to interact with the editor programmatically. It exposes the current state and a set of action creators.
+
+```tsx
+import { useEditor } from "@open-email/editor";
+
+function MyCustomButton() {
+  const { actions, selectedNodeId } = useEditor();
+
+  return (
+    <button onClick={() => actions.deleteNode(selectedNodeId)}>
+      Delete Selected
+    </button>
+  );
+}
+```
+
+### Actions
+
+The `useEditor` hook provides current `state` properties and `actions` methods.
+
+| Method                                 | Description                                          |
+| :------------------------------------- | :--------------------------------------------------- |
+| `updateNode(id, props)`                | Update the properties of a node.                     |
+| `addNode(parentId, node, index)`       | Add a new node to the tree.                          |
+| `deleteNode(id)`                       | Remove a node from the tree.                         |
+| `moveNode(nodeId, newParentId, index)` | Move a node to a different position.                 |
+| `selectNode(id)`                       | Set the currently selected node.                     |
+| `setMode(mode)`                        | Switch between 'visual', 'code', or 'preview' modes. |
+
+## Editor State
+
+The editor state object contains the following properties:
+
+- `document`: The current `EmailDocument` object representing the email.
+- `selectedNodeId`: The ID of the currently selected node (or null).
+- `mode`: The current editor mode (`visual`, `code`, `preview`).
+- `isDirty`: Boolean indicating if the document has unsaved changes.

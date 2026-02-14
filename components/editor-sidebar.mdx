@@ -1,0 +1,39 @@
+---
+title: "Editor Sidebar"
+description: "The component palette and layer tree"
+---
+
+The `<EditorSidebar />` provides the drag-and-drop interface for adding components to the email, as well as a tree view of the current document structure.
+
+## Features
+
+- **Components Tab**: Browse available components grouped by category (Layout, Content, Utility).
+- **Layers Tab**: View and manage the hierarchy of the email document. Reorder elements via drag-and-drop.
+- **Drag & Drop**: Drag components from the sidebar onto the canvas to add them.
+
+## Usage
+
+If you are using `<EmailEditor />`, the sidebar is included by default. You can also use it standalone if you are building a custom editor layout.
+
+```tsx
+import { EditorSidebar } from "@open-email/editor";
+
+function CustomLayout() {
+  return (
+    <div className="flex">
+      <EditorSidebar />
+      {/* ... canvas ... */}
+    </div>
+  );
+}
+```
+
+## Props
+
+<ResponseField name="registry" type="ComponentRegistry">
+  The component registry to use. Defaults to the internal `defaultRegistry`.
+</ResponseField>
+
+<ResponseField name="defaultTab" type="'components' | 'layers'">
+  The tab to show initially. Defaults to "components".
+</ResponseField>

@@ -1,0 +1,81 @@
+---
+title: "Email Editor"
+description: "The main editor component"
+---
+
+The `<EmailEditor />` component is the heart of the library. It acts as the orchestrator, wrapping the editor engine and layout components.
+
+## Usage
+
+```tsx
+import { EmailEditor } from "@open-email/editor";
+
+export default function MyEditor() {
+  return (
+    <div style={{ height: "100vh" }}>
+      <EmailEditor />
+    </div>
+  );
+}
+```
+
+## Props
+
+<ResponseField name="initialDocument" type="EmailDocument">
+  The initial document to load.
+</ResponseField>
+
+<ResponseField name="onChange" type="(document: EmailDocument) => void">
+  Callback fired when the document changes.
+</ResponseField>
+
+<ResponseField name="config" type="EditorConfig">
+  Configuration object for the editor.
+</ResponseField>
+
+<ResponseField name="style" type="CSSProperties">
+  Inline styles for the editor container.
+</ResponseField>
+
+<ResponseField name="className" type="string">
+  Custom class name for the editor container.
+</ResponseField>
+
+## Configuration (`config`)
+
+The `config` prop allows you to toggle features and customize the editor behavior.
+
+```tsx
+<EmailEditor
+  config={{
+    showSidebar: true,
+    showToolbar: true,
+    showProperties: true,
+    theme: "light", // or "dark"
+  }}
+/>
+```
+
+## Slot Overrides
+
+You can replace parts of the editor UI with your own components using slot props.
+
+<ResponseField name="toolbar" type="ReactNode | false">
+  Replace or hide the toolbar.
+</ResponseField>
+
+<ResponseField name="sidebar" type="ReactNode | false">
+  Replace or hide the sidebar.
+</ResponseField>
+
+<ResponseField name="propertiesPanel" type="ReactNode | false">
+  Replace or hide the properties panel.
+</ResponseField>
+
+<ResponseField name="canvas" type="ReactNode">
+  Replace the canvas area (advanced).
+</ResponseField>
+
+<ResponseField name="toolbarActions" type="ReactNode">
+  Render additional content in the toolbar (e.g., a "Send Test" button).
+</ResponseField>

@@ -1,0 +1,61 @@
+---
+title: "Rendering & Export"
+description: "Exporting your emails to HTML, JSON, and React components"
+---
+
+Open Email Editor separates the **document model** (the JSON structure) from the **renderer** (the visual output). This allows you to export your emails in multiple formats.
+
+## JSON Format
+
+The editor uses a custom JSON schema to represent the email structure. This is the source of truth for the document.
+
+### Exporting to JSON
+
+```tsx
+import { exportToJSON, useEditor } from "@open-email/editor";
+
+function SaveButton() {
+  const { document } = useEditor();
+
+  const handleSave = () => {
+    const json = exportToJSON(document);
+    console.log(json);
+  };
+
+  return <button onClick={handleSave}>Save JSON</button>;
+}
+```
+
+### Importing from JSON
+
+```tsx
+import { importFromJSON } from "@open-email/editor";
+
+const jsonString = "{...}"; // Your saved JSON
+const doc = importFromJSON(jsonString);
+```
+
+## HTML Export
+
+You can render the current document state directly to a static HTML string, suitable for sending via any email service provider (ESP).
+
+```tsx
+import { renderToHTML } from "@open-email/editor";
+
+const html = renderToHTML(document);
+```
+
+## React Email Compatibility
+
+Under the hood, Open Email uses [React Email](https://react.email) components. The `renderToReactEmail` function converts the internal document model into a React Element tree composed of standard React Email components (`<Html>`, `<Section>`, `<Text>`, etc.).
+
+```tsx
+import { renderToReactEmail } from "@open-email/editor";
+import { render } from "@react-email/render";
+
+// 1. Convert to React Element
+const reactElement = renderToReactEmail(document);
+
+// 2. Render to HTML using React Email's renderer (optional, if you want full control)
+const html = render(reactElement);
+```

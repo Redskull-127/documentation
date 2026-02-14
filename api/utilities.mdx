@@ -1,0 +1,43 @@
+---
+title: "Utilities"
+description: "Helper functions for tree manipulation and validation"
+---
+
+Use these utility functions when building custom logic or manipulating the document tree programmatically.
+
+## Tree Operations
+
+```tsx
+import { createNode, findNode } from "@open-email/editor";
+```
+
+<ResponseField name="createNode" type="(type, props?, children?) => EmailNode">
+  Creates a new node object with a unique ID.
+</ResponseField>
+
+<ResponseField name="cloneNode" type="(node) => EmailNode">
+  Deeply clones a node and its children, generating new IDs for all.
+</ResponseField>
+
+<ResponseField name="findNode" type="(root, id) => EmailNode | null">
+  Finds a node by ID within a tree.
+</ResponseField>
+
+<ResponseField name="findParent" type="(root, id) => EmailNode | null">
+  Finds the parent of a given node ID.
+</ResponseField>
+
+<ResponseField name="flattenTree" type="(root) => EmailNode[]">
+  Returns an array of all nodes in the tree.
+</ResponseField>
+
+## Document Management
+
+<ResponseField name="createEmptyDocument" type="(title?) => EmailDocument">
+  Creates a fresh document with a default structure (Container > Section > Text).
+</ResponseField>
+
+<ResponseField name="validateDocument" type="(doc) => string[]">
+  Checks a document for errors (missing required fields, duplicate IDs, etc.).
+  Returns an array of error messages.
+</ResponseField>

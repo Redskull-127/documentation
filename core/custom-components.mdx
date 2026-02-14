@@ -1,0 +1,88 @@
+---
+title: "Custom Components"
+description: "Extending the editor with your own React components"
+---
+
+The Open Email Editor is designed to be extensible. You can define your own components and add them to the editor's registry.
+
+## Component Registry
+
+The registry is a map of component types to their definitions. The editor uses this to know what components are available, how they should be rendered in the sidebar, and what properties they accept.
+
+### Component Definition
+
+A `ComponentDefinition` object has the following structure:
+
+```ts
+interface ComponentDefinition {
+  type: string; // Unique type identifier (e.g., 'hero-section')
+  label: string; // Display label (e.g., 'Hero Section')
+  icon: string; // Icon name (from lucide-react)
+  category: string; // Category (layout, content, utility, etc.)
+  description?: string; // Tooltip description
+  acceptsChildren: boolean; // Can this component contain other components?
+  allowedChildTypes?: string[]; // Optional: limit what can be dropped inside
+  defaultProps: Record<string, any>; // Initial props when added
+  properties: PropertySchema[]; // Schema for the properties panel
+}
+```
+
+## Adding a Custom Component
+
+To add a custom component, you need to:
+
+1. Define the component metadata.
+2. Create the React implementation (for rendering).
+3. Merge your definition with the default registry.
+
+### Example: Helper Text Component
+
+```tsx
+import {
+  createRegistry,
+  mergeRegistries,
+  defaultRegistry,
+  EmailEditor,
+  EditorProvider,
+} from "@open-email/editor";
+
+const customComponents = [
+  {
+    type: "helper-text",
+    label: "Helper Text",
+    icon: "info",
+    category: "content",
+    description: "Small text for hints",
+    acceptsChildren: false,
+    defaultProps: {
+      content: "Hint: This is useful.",
+      color: "#64748b",
+    },
+    properties: [
+      {
+        key: "content",
+        label: "Text",
+        type: "text",
+        group: "content",
+      },
+      {
+        key: "color",
+        label: "Color",
+        type: "color",
+        group: "style",
+      },
+    ],
+  },
+];
+
+const myRegistry = mergeRegistries(defaultRegistry, customComponents);
+
+// ... inside your app
+<EditorProvider>
+  {/* Pass registry to EmailEditor (conceptually - implementation pending) */}
+  <EmailEditor />
+</EditorProvider>;
+```
+
+> [!NOTE]
+> Currently, the `EmailEditor` component uses the `defaultRegistry` internally. Custom registry support is being exposed via props in upcoming versions.

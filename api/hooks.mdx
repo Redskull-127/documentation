@@ -1,0 +1,61 @@
+---
+title: "Hooks"
+description: "React hooks for interacting with the editor state"
+---
+
+## useEditor
+
+The primary hook for accessing editor state and actions.
+
+```tsx
+import { useEditor } from "@open-email/editor";
+
+const { document, selectedNodeId, actions } = useEditor();
+```
+
+### Returns
+
+<ResponseField name="document" type="EmailDocument">
+  The current email document.
+</ResponseField>
+
+<ResponseField name="selectedNodeId" type="string | null">
+  The ID of the currently selected node.
+</ResponseField>
+
+<ResponseField name="mode" type="'visual' | 'code' | 'preview'">
+  The current editor mode.
+</ResponseField>
+
+<ResponseField name="isDirty" type="boolean">
+  True if the document has unsaved changes.
+</ResponseField>
+
+<ResponseField name="actions" type="object">
+  Methods to modify the state: `updateNode`, `addNode`, `deleteNode`,
+  `moveNode`, `selectNode`, `setMode`.
+</ResponseField>
+
+## useSelectedNode
+
+A convenience hook to get the full node object for the currently selected node.
+
+```tsx
+import { useSelectedNode } from "@open-email/editor";
+
+const node = useSelectedNode();
+
+if (node) {
+  console.log("Selected:", node.type);
+}
+```
+
+## useNode
+
+Get a specific node by its ID.
+
+```tsx
+import { useNode } from "@open-email/editor";
+
+const node = useNode("some-node-id");
+```
