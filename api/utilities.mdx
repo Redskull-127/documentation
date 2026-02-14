@@ -11,8 +11,13 @@ Use these utility functions when building custom logic or manipulating the docum
 import { createNode, findNode } from "@open-email/editor";
 ```
 
-<ResponseField name="createNode" type="(type, props?, children?) => EmailNode">
-  Creates a new node object with a unique ID.
+<ResponseField
+  name="createNode"
+  type="(type, props?, children?, id?) => EmailNode"
+>
+  Creates a new node object. If `id` is omitted a unique ID is generated
+  automatically. Pass a fixed `id` when you need deterministic output (e.g. SSR
+  / hydration-safe initial documents).
 </ResponseField>
 
 <ResponseField name="cloneNode" type="(node) => EmailNode">
