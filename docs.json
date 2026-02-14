@@ -65,13 +65,13 @@
     "links": [
       {
         "label": "Support",
-        "href": "mailto:hi@mintlify.com"
+        "href": "mailto:admin@meertarbani.in"
       }
     ],
     "primary": {
       "type": "button",
-      "label": "Dashboard",
-      "href": "https://dashboard.mintlify.com"
+      "label": "GitHub",
+      "href": "https://github.com/open-email/editor"
     }
   },
   "contextual": {
@@ -88,9 +88,9 @@
   },
   "footer": {
     "socials": {
-      "x": "https://x.com/mintlify",
-      "github": "https://github.com/mintlify",
-      "linkedin": "https://linkedin.com/company/mintlify"
+      "x": "https://x.com/meertarbani",
+      "github": "https://github.com/redskull-127",
+      "linkedin": "https://www.linkedin.com/in/meertarbani"
     }
   }
 }
