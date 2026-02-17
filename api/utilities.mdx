@@ -54,3 +54,27 @@ import { createNode, findNode } from "@open-email/editor";
 <ResponseField name="generateId" type="(prefix?) => string">
   Generates a unique ID for a node.
 </ResponseField>
+
+## Variable Interpolation
+
+These utilities help you work with template variables (`{{variableName}}`).
+
+```tsx
+import {
+  interpolateVariables,
+  hasVariables,
+  extractVariableNames
+} from "@open-email/editor";
+```
+
+<ResponseField name="interpolateVariables" type="(content, variableData?, variableDefinitions?) => string">
+  Replaces `{{variableName}}` placeholders in a string with values from `variableData` or fallbacks from `variableDefinitions`. Returns the interpolated string.
+</ResponseField>
+
+<ResponseField name="hasVariables" type="(content: string) => boolean">
+  Checks if a string contains any variable placeholders matching the `{{variableName}}` pattern.
+</ResponseField>
+
+<ResponseField name="extractVariableNames" type="(content: string) => string[]">
+  Extracts all unique variable names from a string. For example, `"Hello {{name}}, your code is {{code}}"` returns `["name", "code"]`.
+</ResponseField>

@@ -42,8 +42,21 @@ You can render the current document state directly to a static HTML string, suit
 ```tsx
 import { renderToHTML } from "@open-email/editor";
 
-const html = renderToHTML(document);
+const html = await renderToHTML(document);
 ```
+
+### HTML Export with Variables
+
+When your document contains variables (`{{variableName}}`), pass `variableData` to interpolate them:
+
+```tsx
+const html = await renderToHTML(document, {
+  firstName: "John",
+  companyName: "Acme Corp"
+});
+```
+
+Variables will be replaced with values from `variableData`, falling back to document-level variable definitions if not provided.
 
 ## React Email Compatibility
 

@@ -33,7 +33,11 @@ const { document, selectedNodeId, actions } = useEditor();
 
 <ResponseField name="actions" type="object">
   Methods to modify the state: `updateNode`, `addNode`, `deleteNode`,
-  `moveNode`, `selectNode`, `setMode`.
+  `moveNode`, `selectNode`, `setMode`, `updateVariables`.
+</ResponseField>
+
+<ResponseField name="updateVariables" type="(variables: Record&lt;string, { fallback: string }&gt;) => void">
+  Updates the document's variable definitions. Call this to add, modify, or remove variables programmatically.
 </ResponseField>
 
 ## useSelectedNode
@@ -133,3 +137,16 @@ import { useContainerDropZone } from "@open-email/editor";
 
 const { setNodeRef, isOver } = useContainerDropZone(containerId);
 ```
+
+## useVariables
+
+Get the current document's variable definitions.
+
+```tsx
+import { useVariables } from "@open-email/editor";
+
+const variables = useVariables();
+// Returns: Record<string, { fallback: string }>
+```
+
+This hook returns the `variables` object from the current document, which contains all variable definitions with their fallback values.

@@ -79,3 +79,32 @@ You can replace parts of the editor UI with your own components using slot props
 <ResponseField name="toolbarActions" type="ReactNode">
   Render additional content in the toolbar (e.g., a "Send Test" button).
 </ResponseField>
+
+## Variables
+
+<ResponseField name="variableData" type="Record&lt;string, string&gt;">
+  Variable values for `{{variableName}}` interpolation when exporting HTML or in preview mode. Variables in content will be replaced with these values, falling back to document-level variable definitions if not provided.
+</ResponseField>
+
+<ResponseField name="onExportHTML" type="(html: string) => void">
+  Callback fired when HTML is exported via the toolbar.
+</ResponseField>
+
+<ResponseField name="onExportJSON" type="(json: string) => void">
+  Callback fired when JSON is exported via the toolbar.
+</ResponseField>
+
+### Example with Variables
+
+```tsx
+<EmailEditor
+  variableData={{
+    firstName: "John",
+    companyName: "Acme Corp"
+  }}
+  onExportHTML={(html) => {
+    // HTML with variables interpolated
+    console.log(html);
+  }}
+/>
+```

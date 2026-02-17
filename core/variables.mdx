@@ -1,0 +1,168 @@
+---
+title: "Variables"
+description: "Using template variables in your email content"
+---
+
+Variables allow you to create dynamic email templates by inserting placeholders that can be replaced with actual values when rendering. Variables use the `{{variableName}}` syntax and support fallback values.
+
+## Overview
+
+Variables in Open Email Editor work in two parts:
+
+1. **Variable Definitions**: Document-level variables with unique keys and fallback values
+2. **Variable Data**: Runtime values used when rendering HTML or previewing
+
+## Using Variables in Content
+
+You can insert variables directly into text content using the `{{variableName}}` syntax:
+
+```
+Hello {{firstName}}, welcome to {{companyName}}!
+```
+
+When rendering:
+- If `variableData` provides a value, it's used
+- Otherwise, the fallback value from the variable definition is used
+- If neither exists, an empty string is used
+
+## Managing Variables
+
+### VariableManager Component
+
+The `<VariableManager />` component provides a UI for managing document-level variables:
+
+```tsx
+import { VariableManager, EditorProvider } from "@open-email/editor";
+
+function MyEditor() {
+  return (
+    <EditorProvider>
+      <div className="flex">
+        {/* ... other components ... */}
+        <VariableManager />
+      </div>
+    </EditorProvider>
+  );
+}
+```
+
+<ResponseField name="className" type="string">
+  Optional CSS class name for styling.
+</ResponseField>
+
+### Programmatic Variable Management
+
+You can also manage variables programmatically using the editor hooks:
+
+```tsx
+import { useEditor } from "@open-email/editor";
+
+function CustomVariableEditor() {
+  const { document, updateVariables } = useEditor();
+  const variables = document.variables ?? {};
+
+  const handleAddVariable = () => {
+    updateVariables({
+      ...variables,
+      userName: { fallback: "Guest" },
+    });
+  };
+
+  return <button onClick={handleAddVariable}>Add Variable</button>;
+}
+```
+
+## Variable Definitions
+
+Variables are stored in the document's `variables` property:
+
+```tsx
+{
+  variables: {
+    firstName: { fallback: "Friend" },
+    companyName: { fallback: "Our Company" },
+    discountCode: { fallback: "SAVE10" }
+  }
+}
+```
+
+Each variable must have:
+- **Key**: A valid identifier (alphanumeric + underscore, must start with letter/underscore)
+- **Fallback**: A default value used when no runtime data is provided
+
+## Rendering with Variables
+
+### HTML Export
+
+When exporting to HTML, pass `variableData` to replace variables:
+
+```tsx
+import { renderToHTML } from "@open-email/editor";
+
+const html = await renderToHTML(document, {
+  firstName: "John",
+  companyName: "Acme Corp",
+  discountCode: "SPECIAL50"
+});
+```
+
+Variables in the content will be replaced:
+- `{{firstName}}` → `"John"` (from variableData)
+- `{{companyName}}` → `"Acme Corp"` (from variableData)
+- `{{discountCode}}` → `"SPECIAL50"` (from variableData)
+
+If a variable isn't in `variableData`, the fallback is used:
+- `{{missingVar}}` → fallback value or empty string
+
+### Preview Mode
+
+The editor's preview mode also supports `variableData`:
+
+```tsx
+<EmailEditor
+  variableData={{
+    firstName: "Jane",
+    companyName: "Tech Inc"
+  }}
+/>
+```
+
+## Variable Utilities
+
+The library provides utility functions for working with variables:
+
+```tsx
+import {
+  interpolateVariables,
+  hasVariables,
+  extractVariableNames
+} from "@open-email/editor";
+```
+
+<ResponseField name="interpolateVariables" type="(content, variableData?, variableDefinitions?) => string">
+  Replaces `{{variableName}}` placeholders in a string with values from `variableData` or fallbacks from `variableDefinitions`.
+</ResponseField>
+
+<ResponseField name="hasVariables" type="(content: string) => boolean">
+  Checks if a string contains any variable placeholders.
+</ResponseField>
+
+<ResponseField name="extractVariableNames" type="(content: string) => string[]">
+  Extracts all variable names from a string (e.g., `"Hello {{name}}"` → `["name"]`).
+</ResponseField>
+
+## Inserting Variables in the Editor
+
+When editing text content (text, heading, link, or button components), you can insert variables using the properties panel:
+
+1. Select a text component
+2. Click "Insert variable" or "Create variable…" in the properties panel
+3. Search for existing variables or create a new one
+4. The variable placeholder `{{variableName}}` will be inserted into the content
+
+## Best Practices
+
+- **Use descriptive names**: `firstName` is better than `fn`
+- **Set meaningful fallbacks**: Helpful defaults improve the editing experience
+- **Validate variable data**: Ensure required variables are provided before rendering
+- **Document variables**: Keep track of which variables your templates use

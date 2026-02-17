@@ -25,6 +25,7 @@
             "pages": [
               "core/engine",
               "core/rendering",
+              "core/variables",
               "core/custom-components",
               "core/drag-and-drop"
             ]
