@@ -45,6 +45,19 @@ import { renderToHTML } from "@open-email/editor";
 const html = await renderToHTML(document);
 ```
 
+### Server-side rendering (Next.js, Node.js)
+
+The main package entry is built with `"use client"` for the editor UI. To call `renderToHTML` (or `renderToPlainText`, `renderToReactEmail`) from **server code**—e.g. Next.js API routes, Server Actions, or Route Handlers—use the **server** entry point so it is not treated as a client function:
+
+```tsx
+// In API route, Server Action, or server-only module
+import { renderToHTML } from "@open-email/editor/server";
+
+const html = await renderToHTML(document, variableData);
+```
+
+Use `@open-email/editor` for client components (e.g. the visual editor); use `@open-email/editor/server` for server-only rendering.
+
 ### HTML Export with Variables
 
 When your document contains variables (`{{variableName}}`), pass `variableData` to interpolate them:
