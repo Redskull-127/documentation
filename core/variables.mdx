@@ -139,6 +139,12 @@ import {
 } from "@open-email/editor";
 ```
 
+For **server-side code** (Next.js API routes, Server Actions, Node.js), import from `@open-email/editor/server` so the code is not treated as client-only:
+
+```tsx
+import { interpolateVariables, hasVariables, extractVariableNames } from "@open-email/editor/server";
+```
+
 <ResponseField name="interpolateVariables" type="(content, variableData?, variableDefinitions?) => string">
   Replaces `{{variableName}}` placeholders in a string with values from `variableData` or fallbacks from `variableDefinitions`.
 </ResponseField>
