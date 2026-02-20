@@ -1,0 +1,153 @@
+---
+title: "AI Integration"
+description: "Use the component schema to let an LLM generate email documents programmatically"
+---
+
+Open Email is designed to be AI-native. The `getAISchema()` helper serialises every available component, its accepted props, and document-level settings into a single JSON object that you can drop directly into a system prompt. The LLM then generates valid `EmailDocument` JSON which you load into the editor with `importFromJSON`.
+
+## How it works
+
+```
+getAISchema()  →  system prompt  →  LLM  →  EmailDocument JSON  →  importFromJSON()
+```
+
+## Quick start
+
+### 1. Get the schema (server)
+
+```ts
+import { getAISchema } from "@open-email/editor/server";
+
+const schema = getAISchema();
+// schema.components  – every draggable component, props, defaults
+// schema.documentMeta.fields  – top-level meta (subject, previewText, fonts…)
+```
+
+### 2. Build a system prompt
+
+```ts
+const systemPrompt = `
+You are an email template builder. You output ONLY valid JSON matching the
+EmailDocument schema below — no markdown, no explanation, just JSON.
+
+SCHEMA:
+${JSON.stringify(schema, null, 2)}
+
+Rules:
+- Every node must have a unique "id" (use short random strings).
+- Only use component "type" values listed in the schema.
+- Containers accept children. Leaf nodes (text, button, image, etc.) do not.
+- Set document.meta.title, subject, and previewText.
+- Use the "defaultProps" as a starting point for each node's "props".
+`;
+```
+
+### 3. Parse and load
+
+```ts
+import { importFromJSON } from "@open-email/editor/server";
+
+const raw = await callYourLLM(systemPrompt, userPrompt);
+const document = importFromJSON(raw); // throws if JSON is invalid
+```
+
+### 4. Display in the editor
+
+```tsx
+"use client";
+import { EmailEditor } from "@open-email/editor";
+
+export default function Page({ initialJson }: { initialJson: string }) {
+  return <EmailEditor initialDocument={initialJson} />;
+}
+```
+
+## Full Next.js example
+
+```ts
+// app/api/generate-email/route.ts
+import { getAISchema, importFromJSON } from "@open-email/editor/server";
+import { NextResponse } from "next/server";
+import OpenAI from "openai";
+
+const openai = new OpenAI();
+
+export async function POST(req: Request) {
+  const { prompt } = await req.json();
+  const schema = getAISchema();
+
+  const completion = await openai.chat.completions.create({
+    model: "gpt-4o",
+    response_format: { type: "json_object" },
+    messages: [
+      {
+        role: "system",
+        content: `You are an email builder. Output valid EmailDocument JSON only.\n\nSCHEMA:\n${JSON.stringify(schema)}`,
+      },
+      { role: "user", content: prompt },
+    ],
+  });
+
+  const json = completion.choices[0].message.content ?? "{}";
+
+  // Validate before returning
+  const doc = importFromJSON(json);
+
+  return NextResponse.json({ document: doc });
+}
+```
+
+## Custom registry
+
+If you've extended the default registry with custom components, pass it to `getAISchema()` so the schema stays in sync:
+
+```ts
+import { getAISchema, mergeRegistries, defaultRegistry } from "@open-email/editor/server";
+
+const myRegistry = mergeRegistries(defaultRegistry, [myCustomComponent]);
+const schema = getAISchema(myRegistry);
+```
+
+## Building documents programmatically
+
+You don't need an LLM — you can also construct documents in code using the same primitives:
+
+```ts
+import {
+  createEmptyDocument,
+  createNode,
+  addNode,
+} from "@open-email/editor/server";
+
+const doc = createEmptyDocument("Welcome Email");
+
+const heading = createNode("heading", {
+  content: "Welcome, {{firstName}}!",
+  "style.fontSize": "32px",
+});
+
+const button = createNode("button", {
+  text: "Get started",
+  href: "https://example.com",
+  backgroundColor: "#4f46e5",
+});
+
+// Body is a container, so add children into it
+doc.body = addNode(doc.body, doc.body.id, heading);
+doc.body = addNode(doc.body, doc.body.id, button);
+```
+
+## `getAISchema` reference
+
+```ts
+function getAISchema(registry?: ComponentRegistry): AIDocumentSchema
+```
+
+| Return field | Description |
+|---|---|
+| `components` | Array of `AIComponentSchema` — one entry per draggable component type |
+| `components[n].type` | The string identifier used in `EmailNode.type` |
+| `components[n].acceptsChildren` | Whether this node can contain child nodes |
+| `components[n].defaultProps` | Sensible default props to seed each new node |
+| `components[n].properties` | All editable prop descriptors with types and defaults |
+| `documentMeta.fields` | Descriptor for every `EmailDocument.meta` field |

@@ -55,6 +55,47 @@ import { createNode, findNode } from "@open-email/editor";
   Generates a unique ID for a node.
 </ResponseField>
 
+## Registry Utilities
+
+```tsx
+import {
+  defaultRegistry,
+  createRegistry,
+  mergeRegistries,
+  getComponentsByCategory,
+  getComponentDef,
+  getAISchema,
+} from "@open-email/editor";
+// or from "@open-email/editor/server" in server code
+```
+
+<ResponseField name="defaultRegistry" type="ComponentRegistry">
+  The built-in registry containing all default components. A `Map<EmailNodeType, ComponentDefinition>`.
+</ResponseField>
+
+<ResponseField name="createRegistry" type="(definitions: ComponentDefinition[]) => ComponentRegistry">
+  Creates a new registry from an array of component definitions.
+</ResponseField>
+
+<ResponseField name="mergeRegistries" type="(base, overrides) => ComponentRegistry">
+  Merges custom component definitions on top of a base registry. Use this to add your own components while keeping all defaults.
+</ResponseField>
+
+<ResponseField name="getComponentsByCategory" type="(registry) => Record<string, ComponentDefinition[]>">
+  Groups all components in the registry by their `category` field.
+</ResponseField>
+
+<ResponseField name="getComponentDef" type="(registry, type) => ComponentDefinition | undefined">
+  Looks up a single component definition by its type string.
+</ResponseField>
+
+<ResponseField name="getAISchema" type="(registry?) => AIDocumentSchema">
+  Returns a fully self-describing schema of every component and document-level
+  field. Pass this to an LLM system prompt so it can generate valid
+  `EmailDocument` JSON. See [AI Integration](/core/ai-integration) for a full
+  walkthrough.
+</ResponseField>
+
 ## Variable Interpolation
 
 These utilities help you work with template variables (`{{variableName}}`).

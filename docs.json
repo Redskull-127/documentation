@@ -27,7 +27,8 @@
               "core/rendering",
               "core/variables",
               "core/custom-components",
-              "core/drag-and-drop"
+              "core/drag-and-drop",
+              "core/ai-integration"
             ]
           },
           {
